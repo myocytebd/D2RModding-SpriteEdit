@@ -1,4 +1,4 @@
-﻿
+
 namespace D2RModding_SpriteEdit
 {
     partial class MainForm
@@ -39,6 +39,7 @@ namespace D2RModding_SpriteEdit
             this.combineFramesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.massTranslateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.massExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportFramesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -100,6 +101,7 @@ namespace D2RModding_SpriteEdit
             this.exportToolStripMenuItem,
             this.exportFrameToolStripMenuItem,
             this.exportFramesToolStripMenuItem,
+            this.massExportToolStripMenuItem,
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -109,7 +111,7 @@ namespace D2RModding_SpriteEdit
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -117,56 +119,63 @@ namespace D2RModding_SpriteEdit
             // 
             this.saveToolStripMenuItem.Enabled = false;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Save As...";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(157, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.importToolStripMenuItem.Text = "Import...";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // importFrameToolStripMenuItem
             // 
             this.importFrameToolStripMenuItem.Name = "importFrameToolStripMenuItem";
-            this.importFrameToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.importFrameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.importFrameToolStripMenuItem.Text = "Import Frame...";
             this.importFrameToolStripMenuItem.Click += new System.EventHandler(this.importFrameToolStripMenuItem_Click);
             // 
             // combineFramesToolStripMenuItem
             // 
             this.combineFramesToolStripMenuItem.Name = "combineFramesToolStripMenuItem";
-            this.combineFramesToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.combineFramesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.combineFramesToolStripMenuItem.Text = "Import Frames...";
             this.combineFramesToolStripMenuItem.Click += new System.EventHandler(this.combineFramesToolStripMenuItem_Click);
             // 
             // massTranslateToolStripMenuItem
             // 
             this.massTranslateToolStripMenuItem.Name = "massTranslateToolStripMenuItem";
-            this.massTranslateToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.massTranslateToolStripMenuItem.Text = "Mass Translate...";
+            this.massTranslateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.massTranslateToolStripMenuItem.Text = "Bulk Import...";
             this.massTranslateToolStripMenuItem.Click += new System.EventHandler(this.massTranslateToolStripMenuItem_Click);
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Enabled = false;
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exportToolStripMenuItem.Text = "Export...";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
+            // 
+            // massExportToolStripMenuItem
+            // 
+            this.massExportToolStripMenuItem.Name = "massExportToolStripMenuItem";
+            this.massExportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.massExportToolStripMenuItem.Text = "Bulk Export...";
+            this.massExportToolStripMenuItem.Click += new System.EventHandler(this.massExportToolStripMenuItem_Click);
             // 
             // exportFrameToolStripMenuItem
             // 
             this.exportFrameToolStripMenuItem.Enabled = false;
             this.exportFrameToolStripMenuItem.Name = "exportFrameToolStripMenuItem";
-            this.exportFrameToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.exportFrameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exportFrameToolStripMenuItem.Text = "Export Frame...";
             this.exportFrameToolStripMenuItem.Click += new System.EventHandler(this.exportFrameToolStripMenuItem_Click);
             // 
@@ -174,19 +183,19 @@ namespace D2RModding_SpriteEdit
             // 
             this.exportFramesToolStripMenuItem.Enabled = false;
             this.exportFramesToolStripMenuItem.Name = "exportFramesToolStripMenuItem";
-            this.exportFramesToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.exportFramesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exportFramesToolStripMenuItem.Text = "Export Frames...";
             this.exportFramesToolStripMenuItem.Click += new System.EventHandler(this.exportFramesToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(157, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -477,6 +486,7 @@ namespace D2RModding_SpriteEdit
         private System.Windows.Forms.ToolStripMenuItem massTranslateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportFrameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportFramesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem massExportToolStripMenuItem;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripTextBox numFramesTextBox;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
