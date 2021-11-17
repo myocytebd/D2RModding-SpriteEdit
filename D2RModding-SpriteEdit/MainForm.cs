@@ -843,10 +843,5 @@ namespace D2RModding_SpriteEdit
         {
             currentFrameCount = UInt32.Parse(numFramesTextBox.Text);
         }
-
-        private void imagePreview_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
