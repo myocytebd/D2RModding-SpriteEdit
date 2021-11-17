@@ -752,9 +752,12 @@ namespace D2RModding_SpriteEdit
                     Image img = Image.FromFile(files[i]);
                     string newPath = Path.ChangeExtension(files[i], ".sprite");
                     saveAsSprite(img, 1, newPath);
-                    var splitName = newPath.Split('.');
-                    var lowend = ".lowend.";
-                    saveAsSprite(ResizeImage(img, img.Width / 2, img.Height / 2), currentFrameCount, splitName[0] + lowend + splitName[1]);
+                    string lowend = ".lowend";
+                    var filepath = newPath;
+                    var filepathsplit = String.Format("{0}{1}{2}",
+                    Path.GetFileNameWithoutExtension(filepath), lowend, Path.GetExtension(filepath));
+                    var filepathlow = Path.Combine(Path.GetDirectoryName(filepath), filepathsplit);
+                    saveAsSprite(ResizeImage(img, img.Width / 2, img.Height / 2), currentFrameCount, filepathlow);
                 }
 
                 MessageBox.Show("Converted " + files.Length + " images!");
