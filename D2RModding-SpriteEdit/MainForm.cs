@@ -1,11 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Drawing.Drawing2D;
@@ -188,34 +183,6 @@ namespace D2RModding_SpriteEdit
         {
             InitializeComponent();
         }
-        private void saveAsSprite(Image img, uint fc, string fileName)
-        {
-            var f = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.Write);
-            if(fc == 0)
-            {
-                fc = 1;
-            }
-
-            f.Write(new byte[] { (byte)'S', (byte)'p', (byte)'A', (byte)'1' }, 0, 4);
-            f.Write(BitConverter.GetBytes((ushort)31), 0, 2);
-            f.Write(BitConverter.GetBytes((ushort)img.Width / fc), 0, 2);
-            f.Write(BitConverter.GetBytes((Int32)img.Width), 0, 4);
-            f.Write(BitConverter.GetBytes((Int32)img.Height), 0, 4);
-            f.Seek(0x14, SeekOrigin.Begin);
-            f.Write(BitConverter.GetBytes((UInt32)fc), 0, 4);
-            int x, y;
-            Bitmap bmp = new Bitmap(img);
-            f.Seek(0x28, SeekOrigin.Begin);
-            for (x = 0; x < img.Height; x++)
-            {
-                for (y = 0; y < img.Width; y++)
-                {
-                    var pixel = bmp.GetPixel(y, x);
-                    f.Write(new byte[] { pixel.R, pixel.G, pixel.B, pixel.A }, 0, 4);
-                }
-            }
-            f.Close();
-        }
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
@@ -233,44 +200,10 @@ namespace D2RModding_SpriteEdit
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 // open up the image
-                var fileName = dlg.FileName;
-                var bytes = File.ReadAllBytes(fileName);
-                int x, y;
-                var version = BitConverter.ToUInt16(bytes, 4);
-                var width = BitConverter.ToInt32(bytes, 8);
-                var height = BitConverter.ToInt32(bytes, 0xC);
-                var bmp = new Bitmap(width, height);
-                currentFrameCount = BitConverter.ToUInt32(bytes, 0x14);
-                
-
-                if(version == 31)
-                {   // regular RGBA
-                    for (x = 0; x < height; x++)
-                    {
-                        for (y = 0; y < width; y++)
-                        {
-                            var baseVal = 0x28 + x * 4 * width + y * 4;
-                            bmp.SetPixel(y, x, Color.FromArgb(bytes[baseVal + 3], bytes[baseVal + 0], bytes[baseVal + 1], bytes[baseVal + 2]));
-                        }
-                    }
-                }
-                else if(version == 61)
-                {   // DXT
-                    var tempBytes = new byte[width * height * 4];
-                    Dxt.DxtDecoder.DecompressDXT5(bytes, width, height, tempBytes);
-                    for(y = 0; y < height; y++)
-                    {
-                        for(x = 0; x < width; x++)
-                        {
-                            var baseVal = (y * width) + (x * 4);
-                            bmp.SetPixel(x, y, Color.FromArgb(tempBytes[baseVal + 3], tempBytes[baseVal], tempBytes[baseVal + 1], tempBytes[baseVal + 2]));
-                        }
-                    }
-                }
-
-                currentImage = bmp;
+                currentImage = CLI.LoadSpriteToBitmap(dlg.FileName, out int width, out int height, out uint frameCount);
+                currentFrameCount = frameCount;
                 toolbarText.Text = string.Format("{0}x{1}", width, height);
-                Text = "SpriteEdit - " + fileName;
+                Text = "SpriteEdit - " + dlg.FileName;
             }
         }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -287,39 +220,9 @@ namespace D2RModding_SpriteEdit
 
             if(dlg.ShowDialog() == DialogResult.OK)
             {
-                saveAsSprite(currentImage, currentFrameCount, dlg.FileName);
-                string lowend = ".lowend";
-                var filepath = dlg.FileName;
-                var filepathsplit = String.Format("{0}{1}{2}",
-                Path.GetFileNameWithoutExtension(filepath), lowend, Path.GetExtension(filepath));
-                var filepathlow = Path.Combine(Path.GetDirectoryName(filepath), filepathsplit);
-                saveAsSprite(ResizeImage(currentImage, currentImage.Width / 2, currentImage.Height / 2), currentFrameCount, filepathlow);
+                CLI.SaveAtlasImageToSpriteWithLowEnd(currentImage, dlg.FileName, currentFrameCount);
                 needToSave = false;
             }
-        }
-        public static Image ResizeImage(Image image, int width, int height)
-        {
-            var destRect = new Rectangle(0, 0, width, height);
-            var destImage = new Bitmap(width, height);
-
-            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
-
-            using (var graphics = Graphics.FromImage(destImage))
-            {
-                graphics.CompositingMode = CompositingMode.SourceCopy;
-                graphics.CompositingQuality = CompositingQuality.HighQuality;
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
-                using (var wrapMode = new ImageAttributes())
-                {
-                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
-                }
-            }
-
-            return destImage;
         }
         private void importToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -387,47 +290,7 @@ namespace D2RModding_SpriteEdit
 
                         if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {
-                            foreach (var file in dlg.FileNames)
-                            {
-                                // open up the image
-                                var bytes = File.ReadAllBytes(file);
-                                int x, y;
-                                var version = BitConverter.ToUInt16(bytes, 4);
-                                var width = BitConverter.ToInt32(bytes, 8);
-                                var height = BitConverter.ToInt32(bytes, 0xC);
-                                var bmp = new Bitmap(width, height);
-                                currentFrameCount = BitConverter.ToUInt32(bytes, 0x14);
-
-
-                                if (version == 31)
-                                {   // regular RGBA
-                                    for (x = 0; x < height; x++)
-                                    {
-                                        for (y = 0; y < width; y++)
-                                        {
-                                            var baseVal = 0x28 + x * 4 * width + y * 4;
-                                            bmp.SetPixel(y, x, Color.FromArgb(bytes[baseVal + 3], bytes[baseVal + 0], bytes[baseVal + 1], bytes[baseVal + 2]));
-                                        }
-                                    }
-                                }
-                                else if (version == 61)
-                                {   // DXT
-                                    var tempBytes = new byte[width * height * 4];
-                                    Dxt.DxtDecoder.DecompressDXT5(bytes, width, height, tempBytes);
-                                    for (y = 0; y < height; y++)
-                                    {
-                                        for (x = 0; x < width; x++)
-                                        {
-                                            var baseVal = (y * width) + (x * 4);
-                                            bmp.SetPixel(x, y, Color.FromArgb(tempBytes[baseVal + 3], tempBytes[baseVal], tempBytes[baseVal + 1], tempBytes[baseVal + 2]));
-                                        }
-                                    }
-                                }
-                                var newPath = Path.ChangeExtension(file, "png");
-                                var fileName = newPath.Split('\\');
-                                Image image = bmp;
-                                image.Save(folderBrowserDialog.SelectedPath + "/" + fileName[fileName.Length - 1]);
-                            }
+                            CLI.MassConvertSpritesToAtlasImages(dlg.FileNames, "png", folderBrowserDialog.SelectedPath);
                         }
                     }
                 } 
@@ -746,22 +609,8 @@ namespace D2RModding_SpriteEdit
 
             if(dlg.ShowDialog() == DialogResult.OK)
             {
-                // grab each file, convert to .sprite
-                string[] files = dlg.FileNames;
-                for(var i = 0; i < files.Length; i++)
-                {
-                    Image img = Image.FromFile(files[i]);
-                    string newPath = Path.ChangeExtension(files[i], ".sprite");
-                    saveAsSprite(img, 1, newPath);
-                    string lowend = ".lowend";
-                    var filepath = newPath;
-                    var filepathsplit = String.Format("{0}{1}{2}",
-                    Path.GetFileNameWithoutExtension(filepath), lowend, Path.GetExtension(filepath));
-                    var filepathlow = Path.Combine(Path.GetDirectoryName(filepath), filepathsplit);
-                    saveAsSprite(ResizeImage(img, img.Width / 2, img.Height / 2), currentFrameCount, filepathlow);
-                }
-
-                MessageBox.Show("Converted " + files.Length + " images!");
+                CLI.MassConvertAtlasImagesToSprites(dlg.FileNames);
+                MessageBox.Show("Converted " + dlg.FileNames.Length + " images!");
             }
         }
         /**

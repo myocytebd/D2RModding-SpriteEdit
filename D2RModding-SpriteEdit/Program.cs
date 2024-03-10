@@ -18,7 +18,7 @@ namespace D2RModding_SpriteEdit
                 Application.Run(new MainForm());
                 return;
             }
-            CLI.RunBatch(args);
+            CLI.RunCLI(args);
         }
     }
 }
