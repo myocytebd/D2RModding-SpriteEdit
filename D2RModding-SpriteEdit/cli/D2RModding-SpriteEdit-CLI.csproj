@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>D2RModding_SpriteEdit</RootNamespace>
+    <TargetFramework>net472</TargetFramework>
+    <AssemblyTitle>D2RModding-SpriteEdit-CLI</AssemblyTitle>
+    <Product>D2RModding-SpriteEdit-CLI</Product>
+    <Copyright>Copyright ©  2021</Copyright>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../CLI.cs;../DxtDecoder.cs;" />
+  </ItemGroup>
+</Project>
